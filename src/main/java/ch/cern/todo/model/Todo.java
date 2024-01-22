@@ -2,7 +2,6 @@
 package ch.cern.todo.model;
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "Todo") // Define the table name in the database
 public class Todo {
@@ -21,7 +20,7 @@ public class Todo {
     private String name;
 
     @Column(name = "task_description", nullable = false, length = 500)
-    private String description;
+    private String description="";
 
     // Constructors
     public Todo() {
@@ -55,7 +54,15 @@ public class Todo {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String name) {
         this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

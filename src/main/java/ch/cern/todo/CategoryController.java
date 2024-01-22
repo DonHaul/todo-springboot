@@ -3,8 +3,6 @@ package ch.cern.todo.controller;
 import ch.cern.todo.model.Category;
 import ch.cern.todo.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

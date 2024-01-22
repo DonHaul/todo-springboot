@@ -1,49 +1,80 @@
 package ch.cern.todo;
 import ch.cern.todo.model.Category;
 import ch.cern.todo.model.Todo;
+import ch.cern.todo.repository.CategoryRepository;
 import ch.cern.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
-import java.util.Collection;
+
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
 
-    @Autowired
-    private TodoRepository todoRepository;
+    private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
 
-    @GetMapping("/all")
-    public List<Todo> getAllTodos(){
-        return (List<Todo>) todoRepository.findAll();
+
+    private final TodoRepository todoRepository;
+
+    public TodoController(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
+    @GetMapping
+    public ResponseEntity<List<Todo>> getAllTodos() {
+        List<Todo> todos = (List<Todo>) todoRepository.findAll();
+        return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
 
 
     @GetMapping("/{id}")
-    public String getTodoById(@PathVariable long id, Model model) {
-        Optional<Todo> todo = todoRepository.findById(id);
-        model.addAttribute("todo", todo);
-        return "todo";
+    public Optional<Todo> getTodoById(@PathVariable long id) {
+        return todoRepository.findById(id);
     }
 
 
     @PostMapping
     public Todo createTodo(@RequestBody Todo todo) {
+
+        long category_id = todo.getCategory().getId();
+        logger.warn(String.valueOf(category_id));
+        String category_name = todo.getCategory().getName();
+        logger.warn(String.valueOf(category_name));
+
+        Optional<Category> category =  categoryRepository.findById(category_id);
+        if (category.isEmpty())
+        {
+        logger.warn("Creating Categ");
+        todo.setCategory(categoryRepository.save(new Category(category_name)));
+
+        }
+
         return todoRepository.save(todo);
     }
 
     @PutMapping("/{id}")
-    public Todo updatePerson(@PathVariable Long id, @RequestBody Todo updatedPerson) {
-        Todo existingPerson = todoRepository.findById(id).orElse(null);
-        //if (existingPerson != null) {
-       //     existingPerson.setName(updatedPerson.getName());
-        return todoRepository.save(existingPerson);
-        //}
-        //return null;
+    public Todo updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
+        Todo existingTodo = todoRepository.findById(id).orElse(null);
+        if (existingTodo != null) {
+            existingTodo.setName(updatedTodo.getName());
+            existingTodo.setDescription(updatedTodo.getName());
+            existingTodo.setCategory(updatedTodo.getCategory());
+            return todoRepository.save(existingTodo);
+        }
+        return null;
     }
 
     @DeleteMapping("/{id}")

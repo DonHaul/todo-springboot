@@ -24,10 +24,11 @@ public class Category {
         // Default constructor required by JPA
     }
 
-    public Category(String name, String description) {
+    public Category(String name) {
+        // Default constructor required by JPA
         this.name = name;
-        this.description = description;
     }
+
 
     // Getters and Setters
     public long getId() {
@@ -53,4 +54,5 @@ public class Category {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
