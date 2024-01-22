@@ -1,0 +1,1 @@
+insert into todo(title,description) values ('Laundry','Today')
