@@ -1,4 +1,4 @@
-package ch.cern.todo;
+package ch.cern.todo.controller;
 import ch.cern.todo.model.Category;
 import ch.cern.todo.model.Todo;
 import ch.cern.todo.repository.CategoryRepository;
@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/api/todos")
 public class TodoController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
 
 
     private final TodoRepository todoRepository;
@@ -39,8 +38,6 @@ public class TodoController {
         return new ResponseEntity<>(todos, HttpStatus.OK);
     }
 
-
-
     @GetMapping("/{id}")
     public Optional<Todo> getTodoById(@PathVariable long id) {
         return todoRepository.findById(id);
@@ -50,16 +47,12 @@ public class TodoController {
     @PostMapping
     public Todo createTodo(@RequestBody Todo todo) {
 
-logger.warn("I AM HERE");
-
-
         long category_id = todo.getCategory().getId();
         Optional<Category> category =  categoryRepository.findById(category_id);
         if (category.isEmpty())
         {
-            logger.warn("Creating Categ");
+            // creates new category if not specified
             String category_name = todo.getCategory().getName();
-            logger.warn("the categ name is {}",category_name);
             category = categoryRepository.findByName(category_name);
 
             if (category.isEmpty())
@@ -74,30 +67,25 @@ logger.warn("I AM HERE");
 
     @PutMapping("/{id}")
     public Todo updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
-        logger.warn("UPDATING TO DO {}", id);
         Todo existingTodo = todoRepository.findById(id).orElse(null);
         if (existingTodo != null) {
+            // could be made into a function that updates all fields
             existingTodo.setName(updatedTodo.getName());
             existingTodo.setDescription(updatedTodo.getDescription());
             existingTodo.setDeadline(updatedTodo.getDeadline());
-            logger.warn("READY TO SAVE");
+
             long category_id = existingTodo.getCategory().getId();
             Optional<Category> category =  categoryRepository.findById(category_id);
-            // if this category has no id or if name changend
             String category_name = updatedTodo.getCategory().getName();
-            logger.warn(category_name);
+            // if this category has no id or if name changed, create a bran new one
             if (category.isEmpty() || categoryRepository.findByName(category_name).isEmpty())
             {
                 // create new category
-                logger.warn("Creating Categ");
+
                 existingTodo.setCategory(categoryRepository.save(new Category(category_name)));
 
-                // to do, update/delete categories
+                // todo: update/delete categories
             }
-
-
-            logger.warn("READY TO SAVE");
-            logger.warn(existingTodo.getDescription());
             return todoRepository.save(existingTodo);
         }
         return null;

@@ -14,11 +14,10 @@ public class TodoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TodoApplication.class, args);
 	}
-
 }
 
 @Component
-class TodoCommandLineRinner implements CommandLineRunner
+class TodoCommandLineRunner implements CommandLineRunner
 {
 
 	@Override

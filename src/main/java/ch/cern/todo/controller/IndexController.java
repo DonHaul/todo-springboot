@@ -1,4 +1,4 @@
-package ch.cern.todo;
+package ch.cern.todo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,7 @@ public class IndexController {
 
     @GetMapping("/index")
     public String index() {
-        return "index"; // Assuming "index" is the name of your HTML file (e.g., index.html)
+        // displays index.html
+        return "index";
     }
 }

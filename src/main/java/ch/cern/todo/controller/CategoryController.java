@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/categories")
 public class CategoryController {
 
@@ -25,7 +24,6 @@ public class CategoryController {
     public Optional<Category> getCategoryById(@PathVariable long id) {
         return categoryRepository.findById(id);
     }
-
 
     @PostMapping
     public Category addCategory(@RequestBody Category category) {
