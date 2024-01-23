@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/todos")
 public class TodoController {
 
@@ -49,13 +50,23 @@ public class TodoController {
     @PostMapping
     public Todo createTodo(@RequestBody Todo todo) {
 
+logger.warn("I AM HERE");
+
+
         long category_id = todo.getCategory().getId();
         Optional<Category> category =  categoryRepository.findById(category_id);
         if (category.isEmpty())
         {
             logger.warn("Creating Categ");
             String category_name = todo.getCategory().getName();
+            logger.warn("the categ name is {}",category_name);
+            category = categoryRepository.findByName(category_name);
+
+            if (category.isEmpty())
             todo.setCategory(categoryRepository.save(new Category(category_name)));
+            else
+            {todo.setCategory(category.get());}
+
         }
 
         return todoRepository.save(todo);
