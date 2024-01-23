@@ -25,6 +25,7 @@ This was my first time using Spring Boot and also the first time in 2 years sinc
 - Prettier front end.
 - Currently throught the frontend is not possible to delete `Categories`.
 - Unit tests for the api
+- Throwing errors in the rest api
 
 ----
 Challenge:
