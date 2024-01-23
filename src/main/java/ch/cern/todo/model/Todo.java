@@ -1,6 +1,7 @@
 
 package ch.cern.todo.model;
 import jakarta.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "Todo") // Define the table name in the database
@@ -20,17 +21,23 @@ public class Todo {
     private String name;
 
     @Column(name = "task_description", nullable = false, length = 500)
-    private String description="";
+    private String description = "";
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deadline", nullable = true)
+    private Date deadline = new Date();
+
 
     // Constructors
     public Todo() {
         // Default constructor required by JPA
     }
 
-    public Todo(String name, String description, Category category) {
+    public Todo(String name, String description, Category category, Date deadline) {
         this.name = name;
         this.description = description;
         this.category = category;
+        this.deadline = deadline;
     }
 
     // Getters and Setters
@@ -64,5 +71,14 @@ public class Todo {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    // Setter for completeness (not recommended to use)
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
+
+    public Date getDeadline() {
+        return deadline;
     }
 }
