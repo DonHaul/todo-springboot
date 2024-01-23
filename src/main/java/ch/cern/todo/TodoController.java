@@ -50,16 +50,12 @@ public class TodoController {
     public Todo createTodo(@RequestBody Todo todo) {
 
         long category_id = todo.getCategory().getId();
-        logger.warn(String.valueOf(category_id));
-        String category_name = todo.getCategory().getName();
-        logger.warn(String.valueOf(category_name));
-
         Optional<Category> category =  categoryRepository.findById(category_id);
         if (category.isEmpty())
         {
-        logger.warn("Creating Categ");
-        todo.setCategory(categoryRepository.save(new Category(category_name)));
-
+            logger.warn("Creating Categ");
+            String category_name = todo.getCategory().getName();
+            todo.setCategory(categoryRepository.save(new Category(category_name)));
         }
 
         return todoRepository.save(todo);
@@ -71,7 +67,15 @@ public class TodoController {
         if (existingTodo != null) {
             existingTodo.setName(updatedTodo.getName());
             existingTodo.setDescription(updatedTodo.getName());
-            existingTodo.setCategory(updatedTodo.getCategory());
+
+            long category_id = existingTodo.getCategory().getId();
+            Optional<Category> category =  categoryRepository.findById(category_id);
+            if (category.isEmpty())
+            {
+                logger.warn("Creating Categ");
+                String category_name = existingTodo.getCategory().getName();
+                existingTodo.setCategory(categoryRepository.save(new Category(category_name)));
+            }
             return todoRepository.save(existingTodo);
         }
         return null;
