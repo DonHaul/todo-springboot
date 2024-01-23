@@ -74,11 +74,12 @@ logger.warn("I AM HERE");
 
     @PutMapping("/{id}")
     public Todo updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
+        logger.warn("UPDATING TO DO {}", id);
         Todo existingTodo = todoRepository.findById(id).orElse(null);
         if (existingTodo != null) {
             existingTodo.setName(updatedTodo.getName());
-            existingTodo.setDescription(updatedTodo.getName());
-
+            existingTodo.setDescription(updatedTodo.getDescription());
+            logger.warn("READY TO SAVE");
             long category_id = existingTodo.getCategory().getId();
             Optional<Category> category =  categoryRepository.findById(category_id);
             if (category.isEmpty())
@@ -87,6 +88,8 @@ logger.warn("I AM HERE");
                 String category_name = existingTodo.getCategory().getName();
                 existingTodo.setCategory(categoryRepository.save(new Category(category_name)));
             }
+            logger.warn("READY TO SAVE");
+            logger.warn(existingTodo.getDescription());
             return todoRepository.save(existingTodo);
         }
         return null;
