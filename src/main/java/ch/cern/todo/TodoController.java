@@ -82,12 +82,19 @@ logger.warn("I AM HERE");
             logger.warn("READY TO SAVE");
             long category_id = existingTodo.getCategory().getId();
             Optional<Category> category =  categoryRepository.findById(category_id);
-            if (category.isEmpty())
+            // if this category has no id or if name changend
+            String category_name = updatedTodo.getCategory().getName();
+            logger.warn(category_name);
+            if (category.isEmpty() || categoryRepository.findByName(category_name).isEmpty())
             {
+                // create new category
                 logger.warn("Creating Categ");
-                String category_name = existingTodo.getCategory().getName();
                 existingTodo.setCategory(categoryRepository.save(new Category(category_name)));
+
+                // to do, update/delete categories
             }
+
+
             logger.warn("READY TO SAVE");
             logger.warn(existingTodo.getDescription());
             return todoRepository.save(existingTodo);
