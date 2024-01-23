@@ -79,6 +79,7 @@ logger.warn("I AM HERE");
         if (existingTodo != null) {
             existingTodo.setName(updatedTodo.getName());
             existingTodo.setDescription(updatedTodo.getDescription());
+            existingTodo.setDeadline(updatedTodo.getDeadline());
             logger.warn("READY TO SAVE");
             long category_id = existingTodo.getCategory().getId();
             Optional<Category> category =  categoryRepository.findById(category_id);
